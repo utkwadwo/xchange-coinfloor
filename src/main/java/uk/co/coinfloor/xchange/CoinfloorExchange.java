@@ -113,7 +113,13 @@ public class CoinfloorExchange extends BaseExchange {
 
 		BookData() {
 		}
-
+/* If the orderbook is empty, "==null", then we create an arraylist and then use a for each loop to iterate over orders.values output. We 
+use a ternerary conditional, if the ordter.getType returns orderType.BID then we return "bids" otherwise we return "asks" and then 
+with the dot notation add this output to the arraylist called bids (or ask, respectively) with the bids.add(order) we add that specific
+order that we are on given the loop. We will then end up with an array list with all bid orders and another with all ask orders. Then 
+we use the Collections class to sort the bids array list, "Collections.sort(bids)" and another to sort the ask array list 
+"Collections.sort(asks) . Then we will have a sorted list of bids and asks from the OrderBook. The function getOrdderBook then returns 
+a type of OrderBook class called CachedOrderbook and it contains a sorted list of asks and bids*/
 		synchronized OrderBook getOrderBook() {
 			if (cachedOrderBook == null) {
 				ArrayList<LimitOrder> bids = new ArrayList<>(), asks = new ArrayList<>();
