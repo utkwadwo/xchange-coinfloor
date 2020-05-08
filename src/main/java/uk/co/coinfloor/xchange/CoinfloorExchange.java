@@ -138,6 +138,21 @@ a type of OrderBook class called CachedOrderbook and it contains a sorted list o
 			cachedOrderBook = null;
 		}
 
+		/* orderChanged function returns a type of LimitOrder. First we get the order based on id and set the order, which
+		is a linked listed of id and order, to orders.get(id). 
+		
+		if there is an order with that id, that is the get function does not return "null", then set/update the order status
+		
+		if the newQuantity is 0 then we return OrderStatus.FILLED, otherwise we return OrderStatus.PARTIALLY_FILLED
+		, and thn set the order status accordingly with the "order.setOrderStatus(OrderStatus.FILLED)" 
+		or order.setOrderStatus(OrderStatus.PARTIALLY_FILLED)
+		
+		then in the orders linked list we use the put function to put in the id passed to the orderChanged function an the
+		order, which is equal to the same order id but now with a new quantity (also passed to the function))
+		
+		So, this essentially just checks the status of an order based on id and then updates the status to Filled or partially filled
+		based on whether the new quantity of the order is 0 or not
+		*/
 		synchronized LimitOrder orderChanged(Long id, long newQuantity) {
 			LimitOrder order = orders.get(id);
 			if (order != null) {
@@ -148,6 +163,23 @@ a type of OrderBook class called CachedOrderbook and it contains a sorted list o
 			return order;
 		}
 
+		/* orderClosed does not return anything. id is passed to function and function removes that order from the order linked list. 
+		
+		the orders.remove(id) returns the id and quantity for the specific order at id  and sets the variable "order" to that value. 
+		
+		then if the order is not empty/that is the order exists, then will check if the order.getStatus is not filled,
+		if the ordre is not filled, then we set the status of the order to Canceled with the order.setOrderSstatus(orderStatus.CANCELED)
+		
+		The logic is that when we call the orderClosed function, if the order does exist (does not return a null from the orders.remove(id))
+		then we know the order exists. if the order exists then we need to determine whether the order is filled. if the order is filled
+		then we can leave the status as filled, if the order is not filled, then since we called the orderClosed function, we want to close
+		the order and so wewill change the status of the order to cancelled. 
+		
+		Then we set the CahcedorderBook to null 
+		
+		***not sure why set the cachedOrderBook to null unless there are no other cached orders***
+		 */
+		
 		synchronized void orderClosed(Long id) {
 			LimitOrder order = orders.remove(id);
 			if (order != null) {
